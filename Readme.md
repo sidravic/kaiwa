@@ -22,6 +22,17 @@ To try it in IRB
 
 Kaiwa launches actors for each users and accepts messages using the basic mailbox approach. It uses the `exclusive` or Erlang mode for each actor's `receive` loop. 
 
+A lot of ideas are shamelessly stolen from how sidekiq operates.
+
 The goal is to persist messages sent onto redis.
+
+## Features in the works
+
+1. Basic messaging.
+2. Acknowledgements.
+3. Message persistance.
+4. Presence.
+5. Push support.
+6. Support for Redis Sentinel.
 
 
