@@ -2,43 +2,54 @@ require 'thread_safe'
 require 'logger'
 
 module Kaiwa
-	class Launcher
+	class Launcher			
+		#attr_accessor :launcher
+		#attr_reader :launcher_supervisor
+
+		include Kaiwa::SupervisorHelper	
+		trap_exit :manager_crash_reporter		
 
 		def initialize(options =  {}) 
-			Kaiwa::Configuration.options = options			
+			Kaiwa::Configuration.options = options						
 		end
 
-		def run
-			load_celluloid
-			daemonize
-			@manager = Kaiwa::Manager.new
-			@active_connections = ThreadSafe::Array.new
+		def run					
+			load_celluloid						 
+			@manager = Kaiwa::Manager.new_with_link_and_supervision(self)												
+			Kaiwa::Cache.put('manager', @manager)			
 		end
 
 		def load_celluloid
-			require 'celluloid'
+			require 'celluloid'			
 			require_relative './user.rb'
 			require_relative './manager.rb'
 			require_relative './message.rb'
-		end
+		end	
 
-		def daemonize
-			if RUBY_PLATFORM == 'java'
-				
-			else
-				::Process.daemon(true, true)
-			end
-		end
+		def manager_crash_reporter(actor, reason)
+			Kaiwa::Logger.error("[Manager Crash Reporter] Actor crashed #{actor.inspect} because of #{reason.class}")
+		end	
 
-		def self.run(options = {})	
-		
-			logger = ::Logger.new(STDOUT)						
+		def self.initialize_kaiwa_logger
+			logger = ::Logger.new(STDOUT)
 
 			unless Kaiwa::Logger.logger?
 				logger.debug "Initializing Kaiwa logger..."
 				Kaiwa::Logger.initialize_logger
-				logger.debug "Logger initialized."    
-			end
+				Kaiwa::Logger.info("Logger initialized.")
+			end			
+		end
+
+		def self.initialize_kaiwa_cache
+			Kaiwa::Cache.init
+		end
+
+		def self.run(options = {})						
+
+			# The Cache is needed to store the launcher and launcher supervisors
+			# so Kaiwa Cache is initialized upfront
+			initialize_kaiwa_logger	
+			initialize_kaiwa_cache									
 
 			self_read, self_write = IO.pipe
 
@@ -51,9 +62,18 @@ module Kaiwa
 					puts "Signal #{sig} not supported"
 				end
 			end
+			
+			# Launcher acts as the primary supervisor to the entire stack. 
+			launcher_supervisor = Launcher.supervise(options)
+			launcher = launcher_supervisor.actors.last
+			Kaiwa::Cache.put("launcher_supervisor", launcher_supervisor)
+			Kaiwa::Cache.put("launcher", launcher)
+			launcher.run				
 
-			@launcher = Launcher.new(options)
-			@launcher.run						
+			# while readable_io = IO.select([self_read])
+   #        		signal = readable_io.first[0].gets.strip 
+   #        		Kaiwa::Logger.debug("Received signal: #{signal}")         		
+   #      	end
 		end
-	end
+	end	
 end

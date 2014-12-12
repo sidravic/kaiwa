@@ -1,6 +1,12 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    activesupport (4.1.8)
+      i18n (~> 0.6, >= 0.6.9)
+      json (~> 1.7, >= 1.7.7)
+      minitest (~> 5.1)
+      thread_safe (~> 0.1)
+      tzinfo (~> 1.1)
     celluloid (0.16.0)
       timers (~> 4.0.0)
     coderay (1.1.0)
@@ -8,8 +14,10 @@ GEM
     connection_pool (2.1.0)
     ffi (1.9.6-java)
     hitimes (1.2.2-java)
+    i18n (0.6.11)
     json (1.8.1-java)
     method_source (0.8.2)
+    minitest (5.4.3)
     pry (0.10.1-java)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
@@ -30,13 +38,18 @@ GEM
     thread_safe (0.3.4-java)
     timers (4.0.1)
       hitimes
+    tzinfo (1.2.2)
+      thread_safe (~> 0.1)
 
 PLATFORMS
   java
 
 DEPENDENCIES
+  activesupport
   celluloid
   concurrent-ruby
+  connection_pool
   pry
   sidekiq
+  spoon
   thread_safe

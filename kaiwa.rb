@@ -2,14 +2,22 @@ require 'rubygems'
 require 'bundler'
 
 Bundler.setup(:default)
-
+require 'spoon'
 require 'celluloid'
+require 'json'
+require 'active_support'
 require 'lib/kaiwa/configuration.rb'
 require 'lib/kaiwa/logger.rb'
+require 'lib/kaiwa/cache.rb'
+require 'lib/kaiwa/supervisor_helper.rb'
 require 'lib/kaiwa/launcher.rb'
 require 'pry'
 
 
+
+logger = Logger.new(STDOUT)
+logger.debug(STDOUT)
+logger.debug(Kaiwa::Logger.logger?)
 
 #Kaiwa::Launcher.run
 

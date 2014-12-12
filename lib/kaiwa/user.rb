@@ -1,6 +1,6 @@
 module Kaiwa
 	class User
-		include Celluloid
+		include Kaiwa::SupervisorHelper
 
 		attr_accessor :handle, :roster, :presence
 
