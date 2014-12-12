@@ -20,6 +20,16 @@ logger = Logger.new(STDOUT)
 logger.debug(STDOUT)
 logger.debug(Kaiwa::Logger.logger?)
 
+module Kaiwa
+	def self.redis(&block)
+		redis_pool.with(&block)
+	end
+
+	def self.redis_pool
+		@redis ||= Kaiwa::RedisConnection.create
+	end
+end
+
 #Kaiwa::Launcher.run
 
 # unless Kaiwa::Logger.logger?

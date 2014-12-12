@@ -7,10 +7,7 @@ module Kaiwa
 		POOL_SIZE = 3
 		POOL_TIMEOUT = 3
 
-	#	class << self
-
-
-		def self.create(options = {})
+		def self.create(options = {})			
 			ConnectionPool.new(:timeout => POOL_TIMEOUT, :size => POOL_SIZE) do 
 				build_client(options)	
 			end
