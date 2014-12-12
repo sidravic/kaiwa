@@ -14,8 +14,8 @@ module Kaiwa
 		end
 
 		def run					
-			load_celluloid						 
-			@manager = Kaiwa::Manager.new_with_link_and_supervision(self)												
+			load_celluloid									 
+			@manager = Kaiwa::Manager.new_with_link_and_supervision(self, 'manager')															
 			Kaiwa::Cache.put('manager', @manager)			
 		end
 

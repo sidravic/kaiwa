@@ -38,6 +38,12 @@ module Kaiwa
 									)
 
 			to.mailbox << msg
+		end		
+
+		private
+
+		def serialize_to_yaml
+			self.to_yaml
 		end
 	end
 end

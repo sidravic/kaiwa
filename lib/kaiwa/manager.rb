@@ -3,7 +3,8 @@ module Kaiwa
 		include Kaiwa::SupervisorHelper
 
 		def create_user(handle)
-			user = Kaiwa::User.new_with_link_and_supervision(self, handle)
+			user = Kaiwa::User.new_with_link_and_supervision(self, handle, handle)
+			#user.persist!
 		end
 
 		def delete_user()

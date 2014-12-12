@@ -10,11 +10,11 @@ module Kaiwa
 				new_object
 			end
 
-			def new_with_link_and_supervision(monitor, *args)
-				new_object = self.supervise(*args)
+			def new_with_link_and_supervision(monitor, supervision_name, *args)
+				new_object = self.supervise_as(supervision_name.to_sym, *args)
 				monitor.link(new_object)
 				Kaiwa::Logger.info("New supervised actor created of type #{self.to_s} linking to #{monitor.to_s}")
-				new_object
+				::Celluloid::Actor[supervision_name.to_sym]
 			end
 
 			def unlink_and_terminate_actor(monitor, object)
