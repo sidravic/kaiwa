@@ -22,6 +22,7 @@ module Kaiwa
 		# end
 
 		def self.manager
+			Kaiwa::Logger.debug "Manager exists" if !Celluloid::Actor['manager'].nil?
 			create_manager if Celluloid::Actor['manager'].nil?
 			Celluloid::Actor['manager']
 		end

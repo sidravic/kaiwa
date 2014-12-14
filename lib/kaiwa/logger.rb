@@ -4,7 +4,7 @@ module Kaiwa
 	module Logger
 		extend self 
 
-		def initialize_logger(log_file = STDOUT)
+		def initialize_logger(log_file = 'kaiwa.log')
 			old_logger = defined?(@logger) ? @logger : nil
 			@logger = ::Logger.new(log_file)
 			@logger.level = ::Logger::DEBUG			

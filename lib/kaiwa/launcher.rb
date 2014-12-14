@@ -38,6 +38,7 @@ module Kaiwa
 			unless Kaiwa::Logger.logger?
 				logger.debug "Initializing Kaiwa logger..."
 				Kaiwa::Logger.initialize_logger
+				Celluloid.logger = Kaiwa::Logger.logger
 				Kaiwa::Logger.info("Logger initialized.")
 			end			
 		end

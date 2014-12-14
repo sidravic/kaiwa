@@ -25,7 +25,7 @@ module Kaiwa
         user_actor = Celluloid::Actor[handle.to_sym]
 
         if user_actor
-          Kaiwa::Manager.manager.link(user_actor)
+          #Kaiwa::Manager.manager.link(user_actor)
           user_actor
         else
           create_user(handle)
