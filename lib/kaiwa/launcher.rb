@@ -15,13 +15,15 @@ module Kaiwa
 
 		def run					
 			load_celluloid									 
-			@manager = Kaiwa::Manager.new_with_link_and_supervision(self, 'manager')															
-			Kaiwa::Cache.put('manager', @manager)			
+			@manager = Kaiwa::Manager.manager
 		end
 
 		def load_celluloid
-			require 'celluloid'			
+			require 'celluloid'
+			require 'celluloid/autostart'
 			require_relative './user.rb'
+			require_relative './manager_user_ops'
+			require_relative './manager_message_ops'
 			require_relative './manager.rb'
 			require_relative './message.rb'
 		end	
@@ -44,7 +46,7 @@ module Kaiwa
 			Kaiwa::Cache.init
 		end
 
-		def self.run(options = {})						
+		def self.run(options = {})
 
 			# The Cache is needed to store the launcher and launcher supervisors
 			# so Kaiwa Cache is initialized upfront
@@ -64,7 +66,7 @@ module Kaiwa
 			end
 			
 			# Launcher acts as the primary supervisor to the entire stack. 
-			launcher_supervisor = Launcher.supervise(options)
+			launcher_supervisor = Launcher.supervise_as(:launcher, options)
 			launcher = launcher_supervisor.actors.last
 			Kaiwa::Cache.put("launcher_supervisor", launcher_supervisor)
 			Kaiwa::Cache.put("launcher", launcher)

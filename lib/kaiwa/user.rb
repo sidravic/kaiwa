@@ -1,6 +1,7 @@
 module Kaiwa
 	class User
 		include Kaiwa::SupervisorHelper
+		trap_exit :user_crash_notifier
 
 		attr_accessor :handle, :roster, :presence
 
@@ -31,14 +32,15 @@ module Kaiwa
 			end
 		end
 
-		def send_message(message, to)			
-			msg = Kaiwa::Message.new(self.handle, 
-									 to.handle,
-									 message
-									)
-
+		def send_message(message, to, &block)
+			msg = Kaiwa::Message.new(self.handle, to.handle, message)
 			to.mailbox << msg
-		end		
+			yield msg if block_given?
+		end
+
+		def user_crash_notifier(actor, reason)
+			Kaiwa::Logger.debug("#{actor.inspect} crashed: #{reason.class}")
+		end
 
 		private
 
